@@ -25,7 +25,7 @@ for _, annotations in TRAIN_DATA:
 # Train the model
 optimizer = nlp.begin_training()
 
-for itn in range(10):
+for itn in range(len(TRAIN_DATA)+1):
     random.shuffle(TRAIN_DATA)
     losses = {}
     for text, annotations in TRAIN_DATA:
