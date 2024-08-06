@@ -1,5 +1,6 @@
 import spacy
 import random
+from spacy.training import Example  # Import the Example class
 
 # Training data
 TRAIN_DATA = [
@@ -11,8 +12,10 @@ TRAIN_DATA = [
 nlp = spacy.blank('en')
 
 # Add NER to the pipeline
-ner = nlp.create_pipe('ner')
-nlp.add_pipe(ner, last=True)
+nlp.add_pipe('ner', last=True)
+
+# Get the NER component
+ner = nlp.get_pipe('ner')
 
 # Add labels
 for _, annotations in TRAIN_DATA:
@@ -26,5 +29,10 @@ for itn in range(10):
     random.shuffle(TRAIN_DATA)
     losses = {}
     for text, annotations in TRAIN_DATA:
-        nlp.update([text], [annotations], sgd=optimizer, drop=0.35, losses=losses)
+        # Create a Doc object from the text
+        doc = nlp.make_doc(text)
+        # Create an Example object from the Doc and the annotations
+        example = Example.from_dict(doc, annotations)
+        # Update the model with the Example
+        nlp.update([example], sgd=optimizer, drop=0.35, losses=losses)
     print(losses)
