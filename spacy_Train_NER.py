@@ -36,3 +36,5 @@ for itn in range(len(TRAIN_DATA)+1):
         # Update the model with the Example
         nlp.update([example], sgd=optimizer, drop=0.35, losses=losses)
     print(losses)
+
+nlp.to_disk(r'.\training')
